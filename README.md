@@ -76,10 +76,6 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 			.LocalDateTime
 		Melhorar validações de imput de dados
 			.Mensagens de tratamento de erro
-		
-	.Adicionar Feign client
-			Separar mais granularmente a aplicação.
-				.. Exemplo: Separar o Eleitor. Deixar ele Isolado, seu CRUD e usar Spring Cloud (Feign).
 
 	.Adicionar testes unitário
 			Junit, Mockito, MockMvc,...
