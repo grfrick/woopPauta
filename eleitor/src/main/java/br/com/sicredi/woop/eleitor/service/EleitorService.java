@@ -1,5 +1,7 @@
 package br.com.sicredi.woop.eleitor.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +26,11 @@ public class EleitorService {
         return repository.findAll(pageRequest);
     }
     
-	private void validaEleitor(String numeroTitulo) {
+    public Optional<Eleitor> buscarEleitor(String numeroTitulo) {
+    	return Optional.ofNullable(repository.findByNumeroTitulo(numeroTitulo));
+    }
+
+    private void validaEleitor(String numeroTitulo) {
 		Eleitor cadastro = repository.findByNumeroTitulo(numeroTitulo);
         
         if (null != cadastro) {

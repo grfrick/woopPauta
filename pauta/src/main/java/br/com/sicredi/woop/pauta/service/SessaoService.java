@@ -6,10 +6,10 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.sicredi.woop.pauta.domain.Resultado;
 import br.com.sicredi.woop.pauta.enums.SimNao;
 import br.com.sicredi.woop.pauta.exception.WoopException;
 import br.com.sicredi.woop.pauta.model.Pauta;
-import br.com.sicredi.woop.pauta.model.Resultado;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.repository.PautaRepository;
@@ -17,7 +17,9 @@ import br.com.sicredi.woop.pauta.repository.PautaRepository;
 @Service
 public class SessaoService {
 
-    @Autowired
+    private static final String EMPATE = "EMPATE";
+    
+	@Autowired
     private PautaRepository repository;
 
     public Pauta iniciarSessao(String idPauta, LocalDateTime inicio, LocalDateTime fim) {
@@ -42,9 +44,13 @@ public class SessaoService {
 
 	private Resultado contabilizaVotos(Collection<Voto> votos) {
 		if (null != votos) {
-	        return new Resultado(new Long(votos.size()), 
-	        					 votos.stream().filter(v -> v.getVoto().compareTo(SimNao.SIM) == 0).count(), 
-	        					 votos.stream().filter(v -> v.getVoto().compareTo(SimNao.NAO) == 0).count());
+	         Resultado escrutinio = new Resultado(new Long(votos.size()), 
+	        					 				  votos.stream().filter(v -> v.getVoto().compareTo(SimNao.SIM) == 0).count(), 
+	        					 				  votos.stream().filter(v -> v.getVoto().compareTo(SimNao.NAO) == 0).count());
+	         escrutinio.setVencedor(escrutinio.getVotosNao() == escrutinio.getVotosSim() ? EMPATE : 
+	        	 					escrutinio.getVotosNao() > escrutinio.getVotosSim() ? SimNao.NAO.toString() : SimNao.SIM.toString());
+	         
+	         return escrutinio;
         } else {
         	return new Resultado(0L, 0L, 0L);
         }
