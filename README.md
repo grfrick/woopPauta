@@ -51,14 +51,19 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	Rodar applicação: 
 		Eclipse:
 			.Pauta > Botão direitor em cima de "PautaApplication.java" e Selecionar: "Run As..." "Java Application"
+			.Eleitor > Botão direitor em cima de "EleitorApplication.java" e Selecionar: "Run As..." "Java Application"
 	
 		Maven:
 			.Pauta > No diretorio da aplicação rode a linha de commando: "mvn spring-boot:run"
+			.Eleitor > No diretorio da aplicação rode a linha de commando: "mvn spring-boot:run"
 		
-		"No ar" em: http://localhost:8090/
-	
+		"No ar" em: 
+			.Pauta > http://localhost:8090/
+			.Eleitor > http://localhost:8091/
+
 	Acessar Swagger:
 		.Pauta: http://localhost:8090/swagger-ui.html
+		.Eleitor: http://localhost:8091/swagger-ui.html
 	
 	Tecnologias: Docker, Mongo, Spring Boot, Spring Cloud, Java8, Rest, ...
 		
@@ -69,6 +74,8 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	.Cliente Rest
 		Melhorar tipo dados:
 			.LocalDateTime
+		Melhorar validações de imput de dados
+			.Mensagens de tratamento de erro
 		
 	.Adicionar Feign client
 			Separar mais granularmente a aplicação.
