@@ -31,10 +31,10 @@ public class EleitorService {
     }
 
     private void validaEleitor(String numeroTitulo) {
-		Eleitor cadastro = repository.findByNumeroTitulo(numeroTitulo);
+		Optional<Eleitor> cadastro = Optional.ofNullable(repository.findByNumeroTitulo(numeroTitulo));
         
-        if (null != cadastro) {
-            throw new WoopException("Já existe um eleitor com o mesmo titulo eleitora [" + cadastro.getNumeroTitulo() + "]");
+        if (cadastro.isPresent()) {
+            throw new WoopException("Já existe um eleitor com o mesmo titulo [" + cadastro.get().getNumeroTitulo() + "]");
         }
 	}
 }

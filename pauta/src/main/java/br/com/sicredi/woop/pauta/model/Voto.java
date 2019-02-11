@@ -3,7 +3,7 @@ package br.com.sicredi.woop.pauta.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import br.com.sicredi.woop.pauta.enums.SimNao;
+import br.com.sicredi.woop.pauta.enums.SimNaoEnum;
 
 @Document
 public class Voto {
@@ -11,12 +11,12 @@ public class Voto {
     @Id
     private String id;
     private String idEleitor;
-    private SimNao voto;
+    private SimNaoEnum voto;
     
     public Voto() {
     }
 
-    public Voto(String idEleitor, SimNao voto) {
+    public Voto(String idEleitor, SimNaoEnum voto) {
         this.idEleitor = idEleitor;
         this.voto = voto;
     }
@@ -33,11 +33,11 @@ public class Voto {
 		this.idEleitor = idEleitor;
 	}
 
-	public SimNao getVoto() {
+	public SimNaoEnum getVoto() {
 		return voto;
 	}
 
-	public void setVoto(SimNao voto) {
+	public void setVoto(SimNaoEnum voto) {
 		this.voto = voto;
 	}
 }

@@ -23,24 +23,24 @@ import io.swagger.annotations.ApiOperation;
 public class SessaoController {
 
     @Autowired
-    private SessaoService sessaoService;
+    private SessaoService service;
 
     @ApiOperation(
             value = "Iniciar a sessão de uma Pauta.",
             notes = "Inicia a sessão de uma unica Pauta.")    
-    @PostMapping("/{idPauta}/iniciarSessao")
+    @PostMapping("/iniciarSessao/{idPauta}")
     public ResponseEntity iniciarSessao(@PathVariable("idPauta") String idPauta,
 								    	@RequestParam(value = "Inicio", required = false) LocalDateTime inicio,
 										@RequestParam(value = "Fim", required = false) LocalDateTime fim) {
-    	sessaoService.iniciarSessao(idPauta, inicio, fim);
+    	service.iniciarSessao(idPauta, inicio, fim);
         return new ResponseEntity(HttpStatus.CREATED);
     }
    
     @ApiOperation(
             value = "Buscar a contagem de Votos de uma Pauta.",
             notes = "Deve buscar os totais de votos realizados numa sessão de uma pauta.")    
-    @GetMapping("/{idPauta}/resultado/")
+    @GetMapping("/resultado/{idPauta}")
     public ResponseEntity<Resultado> buscarResultadoVotacaoPauta(@PathVariable("idPauta") String idPauta) {
-    	return new ResponseEntity(sessaoService.resultadoVotacaoPauta(idPauta), HttpStatus.OK);
+    	return new ResponseEntity(service.resultadoVotacaoPauta(idPauta), HttpStatus.OK);
     }
 }

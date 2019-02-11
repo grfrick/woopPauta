@@ -1,7 +1,6 @@
 package br.com.sicredi.woop.pauta.domain;
 
 public class Eleitor {
-
     private String id;
     private String nome;
     private String numeroTitulo;

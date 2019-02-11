@@ -47,7 +47,7 @@ public class EleitorController {
             notes = "Buscar um Eleitor pelo numeroTitulo.")
     @GetMapping("buscar/{numeroTitulo}")
     public ResponseEntity<Eleitor> buscarEleitor(@PathVariable("numeroTitulo") String numeroTitulo) {
-        return service.buscarEleitor(numeroTitulo)
-                        		.map(eleitor -> new ResponseEntity<>(eleitor, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        return service.buscarEleitor(numeroTitulo).map(eleitor -> new ResponseEntity<>(eleitor, HttpStatus.OK))
+        										  .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 }

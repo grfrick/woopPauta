@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 public class PautaController {
 
     @Autowired
-    private PautaService pautaService;
+    private PautaService service;
 
     @ApiOperation(
             value = "Cadastro da Pauta.",
@@ -31,7 +31,7 @@ public class PautaController {
     @PostMapping("cadastro")
     public ResponseEntity cadastrarPauta(@RequestParam(value = "Titulo", required = true) String titulo,
     								     @RequestParam(value = "Descricao", required = false) String descricao) {
-    	pautaService.criarPauta(titulo, descricao);
+    	service.criarPauta(titulo, descricao);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
@@ -40,8 +40,8 @@ public class PautaController {
             notes = "Buscar uma Pauta por iD.")
     @GetMapping("buscar/{idPauta}")
     public ResponseEntity<Pauta> encontrarPauta(@PathVariable("idPauta") String idPauta) {
-        return pautaService.buscarPautaPorId(idPauta)
-                        		.map(pauta -> new ResponseEntity<>(pauta, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        return service.buscarPautaPorId(idPauta).map(pauta -> new ResponseEntity<>(pauta, HttpStatus.OK))
+        												.orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
     
     @ApiOperation(
@@ -50,7 +50,6 @@ public class PautaController {
     @GetMapping("/listar")
     public ResponseEntity<Page<Pauta>> buscarPautas(@RequestParam(value = "page", defaultValue = "0") int page,
                     							    @RequestParam(value = "size", defaultValue = "25") int size) {
-        Page<Pauta> all = pautaService.buscarTodasPautas(PageRequest.of(page, size));
-        return new ResponseEntity<>(all, HttpStatus.OK);
+        return new ResponseEntity<>(service.buscarTodasPautas(PageRequest.of(page, size)), HttpStatus.OK);
     }
 }

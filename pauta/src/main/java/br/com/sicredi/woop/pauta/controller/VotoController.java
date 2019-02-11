@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.sicredi.woop.pauta.enums.SimNao;
+import br.com.sicredi.woop.pauta.enums.SimNaoEnum;
 import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.service.VotoService;
 import io.swagger.annotations.Api;
@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 public class VotoController {
 
     @Autowired
-    private VotoService votoService;
+    private VotoService service;
 
     @ApiOperation(
             value = "Votar em uma Pauta.",
@@ -30,8 +30,8 @@ public class VotoController {
     @PostMapping("/{idPauta}")
     public ResponseEntity votar(@PathVariable("idPauta") String idPauta, 
 					    		@RequestParam(value = "numeroTitulo", required = true) String numeroTitulo,
-							    @RequestParam(value = "voto", required = false) SimNao voto) {
-    	votoService.votar(idPauta, new Voto(numeroTitulo, voto));
+							    @RequestParam(value = "voto", required = false) SimNaoEnum voto) {
+    	service.votar(idPauta, new Voto(numeroTitulo, voto));
         return new ResponseEntity(HttpStatus.CREATED);
     }
 }

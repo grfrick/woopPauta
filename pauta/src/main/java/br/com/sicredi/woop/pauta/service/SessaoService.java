@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.sicredi.woop.pauta.domain.Resultado;
-import br.com.sicredi.woop.pauta.enums.SimNao;
+import br.com.sicredi.woop.pauta.enums.SimNaoEnum;
 import br.com.sicredi.woop.pauta.exception.WoopException;
 import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
@@ -45,10 +45,10 @@ public class SessaoService {
 	private Resultado contabilizaVotos(Collection<Voto> votos) {
 		if (null != votos) {
 	         Resultado escrutinio = new Resultado(new Long(votos.size()), 
-	        					 				  votos.stream().filter(v -> v.getVoto().compareTo(SimNao.SIM) == 0).count(), 
-	        					 				  votos.stream().filter(v -> v.getVoto().compareTo(SimNao.NAO) == 0).count());
+	        					 				  votos.stream().filter(v -> v.getVoto().compareTo(SimNaoEnum.SIM) == 0).count(), 
+	        					 				  votos.stream().filter(v -> v.getVoto().compareTo(SimNaoEnum.NAO) == 0).count());
 	         escrutinio.setVencedor(escrutinio.getVotosNao() == escrutinio.getVotosSim() ? EMPATE : 
-	        	 					escrutinio.getVotosNao() > escrutinio.getVotosSim() ? SimNao.NAO.toString() : SimNao.SIM.toString());
+	        	 					escrutinio.getVotosNao() > escrutinio.getVotosSim() ? SimNaoEnum.NAO.toString() : SimNaoEnum.SIM.toString());
 	         
 	         return escrutinio;
         } else {
