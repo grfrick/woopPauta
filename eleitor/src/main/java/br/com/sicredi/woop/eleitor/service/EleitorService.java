@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.sicredi.woop.eleitor.exception.EleitorWoopException;
+import br.com.sicredi.woop.eleitor.exception.WoopException;
 import br.com.sicredi.woop.eleitor.model.Eleitor;
 import br.com.sicredi.woop.eleitor.repository.EleitorRepository;
 
@@ -18,7 +18,7 @@ public class EleitorService {
     @Autowired
     private EleitorRepository repository;
 
-    public void criar(String nome, String numeroTitulo) throws EleitorWoopException {
+    public void criar(String nome, String numeroTitulo) throws WoopException {
         validaEleitor(numeroTitulo);
         repository.save(new Eleitor(nome, numeroTitulo));
     }
@@ -31,11 +31,11 @@ public class EleitorService {
     	return Optional.ofNullable(repository.findByNumeroTitulo(numeroTitulo));
     }
 
-    private void validaEleitor(String numeroTitulo) throws EleitorWoopException {
+    private void validaEleitor(String numeroTitulo) throws WoopException {
 		Optional<Eleitor> cadastro = Optional.ofNullable(repository.findByNumeroTitulo(numeroTitulo));
         
         if (cadastro.isPresent()) {
-            throw new EleitorWoopException(HttpStatus.BAD_REQUEST, "Já existe um eleitor com o mesmo titulo [" + cadastro.get().getNumeroTitulo() + "]");
+            throw new WoopException(HttpStatus.BAD_REQUEST, "Já existe um eleitor com o mesmo titulo [" + cadastro.get().getNumeroTitulo() + "]");
         }
 	}
 }

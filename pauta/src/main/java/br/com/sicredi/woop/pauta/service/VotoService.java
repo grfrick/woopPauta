@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.sicredi.woop.pauta.client.EleitorClient;
-import br.com.sicredi.woop.pauta.exception.EleitorWoopException;
-import br.com.sicredi.woop.pauta.exception.PautaWoopException;
-import br.com.sicredi.woop.pauta.exception.SessaoWoopException;
-import br.com.sicredi.woop.pauta.exception.VotoWoopException;
+import br.com.sicredi.woop.pauta.exception.WoopException;
 import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
@@ -28,7 +25,7 @@ public class VotoService {
 	public EleitorClient client;
 
 	public Pauta votar(String id, Voto voto) {
-        Pauta pauta = repository.findById(id).orElseThrow(() -> new PautaWoopException(HttpStatus.NOT_FOUND, id));
+        Pauta pauta = repository.findById(id).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, id));
 
         validaPeriodoVotacao(pauta);        
         validaEleitorValido(voto.getIdEleitor());
@@ -42,13 +39,13 @@ public class VotoService {
 
 	private void validaEleitorValido(String tituloEleitor) {
 		if (null == client.buscarEleitor(tituloEleitor)) {
-			throw new EleitorWoopException(HttpStatus.NOT_FOUND, "Eleitor não é válido com o título [" + tituloEleitor + "]");
+			throw new WoopException(HttpStatus.NOT_FOUND, "Eleitor não é válido com o título [" + tituloEleitor + "]");
 		}
 	}
 
 	private void validaPeriodoVotacao(Pauta pauta) {
 		if (LocalDateTime.now().isAfter(pauta.getSessao().getFim())) 
-            throw new VotoWoopException(HttpStatus.UNAUTHORIZED, "A sessão já encerrou, não é mais possivel votar. Seja mais rapido da próxima vez =]");
+            throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão já encerrou, não é mais possivel votar. Seja mais rapido da próxima vez =]");
 	}
 
 	private void validaVotoRepetido(String id, String idEleitor, Collection<Voto> votos) {
@@ -57,11 +54,11 @@ public class VotoService {
 							            .findFirst();
 
         if (temVoto.isPresent()) 
-        	throw new EleitorWoopException(HttpStatus.UNAUTHORIZED,"Eleitor [" + idEleitor + "] já votou na Pauta [" + id + "].");
+        	throw new WoopException(HttpStatus.UNAUTHORIZED,"Eleitor [" + idEleitor + "] já votou na Pauta [" + id + "].");
 	}
 
 	private void validaPauta(String id, Sessao sessao) {
 		if (null == sessao) 
-        	throw new SessaoWoopException(HttpStatus.NOT_FOUND, "Sessão da Pauta [" + id + "] não encontrada.");
+        	throw new WoopException(HttpStatus.NOT_FOUND, "Sessão da Pauta [" + id + "] não encontrada.");
 	}
 }
