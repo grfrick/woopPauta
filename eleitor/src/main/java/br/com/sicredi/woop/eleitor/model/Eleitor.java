@@ -1,7 +1,5 @@
 package br.com.sicredi.woop.eleitor.model;
 
-import javax.validation.constraints.Pattern;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,7 +9,6 @@ public class Eleitor {
     @Id
     private String id;
     private String nome;
-    @Pattern(regexp = "(\\d){9}")
     private String numeroTitulo;
 
     public Eleitor() {
