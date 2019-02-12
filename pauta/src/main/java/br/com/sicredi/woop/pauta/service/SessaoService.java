@@ -14,6 +14,7 @@ import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.repository.PautaRepository;
+import br.com.sicredi.woop.pauta.repository.SessaoRepository;
 
 @Service
 public class SessaoService {
@@ -22,12 +23,15 @@ public class SessaoService {
     
 	@Autowired
     private PautaRepository repository;
+	
+	@Autowired
+    private SessaoRepository sessaoRepository;
 
     public Pauta iniciarSessao(String idPauta, LocalDateTime inicio, LocalDateTime fim) {
         Pauta pauta = repository.findById(idPauta).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, idPauta));
         
         validaPauta(idPauta, pauta);
-        pauta.setSessao(new Sessao(inicio, fim));
+        pauta.setSessao(sessaoRepository.save(new Sessao(inicio, fim)));
 
         return repository.save(pauta);
     }
@@ -35,6 +39,14 @@ public class SessaoService {
 	private void validaPauta(String idPauta, Pauta pauta) {
 		if (null == pauta)
         	throw new WoopException(HttpStatus.NOT_FOUND, "Pauta [" + idPauta + "] não localizada.");
+		
+		if (null != pauta.getSessao()) {
+			if (LocalDateTime.now().isBefore(pauta.getSessao().getFim())) 
+				throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão esta aberta, aguarde encerrar.");
+		
+			if (null != pauta.getSessao().getVotos() && pauta.getSessao().getVotos().size() > 0)
+				throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão esta encerra, e a pauta foi votada. Não é possivel reabrila.");
+		}
 	}
 
     public Resultado resultadoVotacaoPauta(String idPauta) {

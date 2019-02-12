@@ -14,6 +14,7 @@ import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.repository.PautaRepository;
+import br.com.sicredi.woop.pauta.repository.VotoRepository;
 
 @Service
 public class VotoService {
@@ -22,17 +23,20 @@ public class VotoService {
 	public PautaRepository repository;
 	
 	@Autowired
+	public VotoRepository votoRepository;
+	
+	@Autowired
 	public AssociadoClient client;
 
-	public Pauta votar(String numeroMatricula, Voto voto) {
-        Pauta pauta = repository.findById(numeroMatricula).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, numeroMatricula));
+	public Pauta votar(String id, Voto voto) {
+        Pauta pauta = repository.findById(id).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, id));
 
         validaPeriodoVotacao(pauta);        
         validaAssociadoValido(voto.getNumeroMatricula());
-        validaPauta(numeroMatricula, pauta.getSessao());
-        validaVotoRepetido(numeroMatricula, voto.getNumeroMatricula(), pauta.getSessao().getVotos());
+        validaPauta(id, pauta.getSessao());
+        validaVotoRepetido(id, voto.getNumeroMatricula(), pauta.getSessao().getVotos());
         
-        pauta.getSessao().getVotos().add(voto);
+        pauta.getSessao().getVotos().add(votoRepository.save(voto));
         
         return repository.save(pauta);
     }
