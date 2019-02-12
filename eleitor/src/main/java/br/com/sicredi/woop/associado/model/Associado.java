@@ -1,22 +1,22 @@
-package br.com.sicredi.woop.eleitor.model;
+package br.com.sicredi.woop.associado.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Eleitor {
+public class Associado {
 
     @Id
     private String id;
     private String nome;
-    private String numeroTitulo;
+    private String numeroMatricula;
 
-    public Eleitor() {
+    public Associado() {
     }
     
-    public Eleitor(final String nome, final String numeroTitulo) {
+    public Associado(final String nome, final String numeroMatricula) {
         this.nome = nome;
-        this.numeroTitulo = numeroTitulo;
+        this.numeroMatricula = numeroMatricula;
     }
 
 	public String getId() {
@@ -35,11 +35,11 @@ public class Eleitor {
 		this.nome = nome;
 	}
 
-	public String getNumeroTitulo() {
-		return numeroTitulo;
+	public String getNumeroMatricula() {
+		return numeroMatricula;
 	}
 
-	public void setNumeroTitulo(String numeroTitulo) {
-		this.numeroTitulo = numeroTitulo;
+	public void setNumeroMatricula(String numeroMatricula) {
+		this.numeroMatricula = numeroMatricula;
 	}
 }

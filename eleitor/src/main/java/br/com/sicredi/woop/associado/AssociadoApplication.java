@@ -1,13 +1,13 @@
-package br.com.sicredi.woop.eleitor;
+package br.com.sicredi.woop.associado;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EleitorApplication {
+public class AssociadoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EleitorApplication.class, args);
+		SpringApplication.run(AssociadoApplication.class, args);
 	}
 
 }

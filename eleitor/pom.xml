@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.sicredi.woop</groupId>
-	<artifactId>eleitor</artifactId>
+	<artifactId>associado</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>eleitor</name>
+	<name>associado</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

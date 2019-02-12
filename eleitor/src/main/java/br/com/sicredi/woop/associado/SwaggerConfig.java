@@ -1,4 +1,4 @@
-package br.com.sicredi.woop.eleitor;
+package br.com.sicredi.woop.associado;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class SwaggerConfig {
 		                .directModelSubstitute(LocalTime.class, String.class)
 		                .directModelSubstitute(ZonedDateTime.class, String.class)
                         .select()
-                        .apis(RequestHandlerSelectors.basePackage("br.com.sicredi.woop.eleitor"))
+                        .apis(RequestHandlerSelectors.basePackage("br.com.sicredi.woop.associado"))
                         .paths(PathSelectors.any())
                         .build();
     }
