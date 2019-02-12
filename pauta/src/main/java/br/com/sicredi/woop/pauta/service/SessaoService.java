@@ -31,23 +31,11 @@ public class SessaoService {
         Pauta pauta = repository.findById(idPauta).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, idPauta));
         
         validaPauta(idPauta, pauta);
+        validaSessao(idPauta, pauta);
         pauta.setSessao(sessaoRepository.save(new Sessao(inicio, fim)));
 
         return repository.save(pauta);
     }
-
-	private void validaPauta(String idPauta, Pauta pauta) {
-		if (null == pauta)
-        	throw new WoopException(HttpStatus.NOT_FOUND, "Pauta [" + idPauta + "] não localizada.");
-		
-		if (null != pauta.getSessao()) {
-			if (LocalDateTime.now().isBefore(pauta.getSessao().getFim())) 
-				throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão esta aberta, aguarde encerrar.");
-		
-			if (null != pauta.getSessao().getVotos() && pauta.getSessao().getVotos().size() > 0)
-				throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão esta encerra, e a pauta foi votada. Não é possivel reabrila.");
-		}
-	}
 
     public Resultado resultadoVotacaoPauta(String idPauta) {
         Pauta pauta = repository.findById(idPauta).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, idPauta));
@@ -69,11 +57,19 @@ public class SessaoService {
         }
 	}
 
+	private void validaPauta(String idPauta, Pauta pauta) {
+		if (null == pauta)
+        	throw new WoopException(HttpStatus.NOT_FOUND, "Pauta [" + idPauta + "] não localizada.");
+	}
+
 	private void validaSessao(String idPauta, Pauta pauta) {
 		if (null == pauta.getSessao()) 
         	throw new WoopException(HttpStatus.NOT_FOUND, "Sessao não encontrada para a pauta [" + idPauta + "]");
 		
 		if (LocalDateTime.now().isBefore(pauta.getSessao().getFim())) 
             throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão está aberta, espere encerrar para ver o resultado final.");
+		
+		if (null != pauta.getSessao().getVotos() && pauta.getSessao().getVotos().size() > 0)
+			throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão esta encerra, e a pauta foi votada. Não é possivel reabrila.");
 	}
 }
