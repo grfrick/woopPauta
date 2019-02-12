@@ -94,3 +94,5 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	Usar conceito da arquitetura de microserviços com Spring Boot usando Rest para consumo, alem disso 
 	usado Spring Cloud para acessar clientes externos, o que possibilitaria deixar ainda mais granular os projetos.
 	
+## Rabisco de idéias
+![alt text](https://github.com/grfrick/woopPauta/blob/master/rabisco%20inicia%20de%20ideias.jpeg)
