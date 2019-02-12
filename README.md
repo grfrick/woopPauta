@@ -65,7 +65,7 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 		.Pauta: http://localhost:8090/swagger-ui.html
 		.Associado: http://localhost:8091/swagger-ui.html
 	
-	Tecnologias: Docker, Mongo, Spring Boot, Spring Cloud, Java8, Rest, Maven...
+	Tecnologias do MVP: Docker, Mongo, Spring Boot, Spring Cloud, Java8, Rest, Maven, Junit, Mockito...
 		
 ## ++Para Melhorar++
 	.Documentação Swagger
@@ -95,4 +95,5 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	usado Spring Cloud para acessar clientes externos, o que possibilitaria deixar ainda mais granular os projetos.
 	
 ## Rabisco de idéias
+	MVP: Criar estrutura para suporte rest para a criação e listagem de: Associado, Pauta, Sessao e Voto. 
 ![alt text](https://github.com/grfrick/woopPauta/blob/master/rabisco%20inicia%20de%20ideias%20MVP.jpeg)
