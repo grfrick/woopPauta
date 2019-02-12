@@ -13,17 +13,17 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 				[Instalar o MongoDB]
 			.docker images
 				[Visualizar imagem baixada]
-			.docker run --name sicredi-mongo -p 27017:27017 -d mongo
+			.docker run --name sicrediMongo -p 27017:27017 -d mongo
 				[Subir um contêiner]
-			.docker exec -it sicredi-mongo mongo admin
+			.winpty docker exec -it sicrediMongo mongo admin
 				[Executar o Administrador do MongoDB]
 			.docker ps -a
 				[Verifica o estado atual dos contêineres]
-			.docker stop sicredi-mongo
+			.docker stop sicrediMongo
 				[Parar o contêiner criado]
-			.docker start sicredi-mongo
+			.docker start sicrediMongo
 				[Iniciar com o comando]
-			.docker rm sicredi-mongo
+			.docker rm sicrediMongo
 				[Remover um contêiner]
 
 		...MongoDB
