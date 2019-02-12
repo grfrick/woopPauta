@@ -27,8 +27,8 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 				[Remover um contêiner]
 
 		...MongoDB
-			http://localhost:27017 --> Verificar
-			...command:
+			http://localhost:27017 --> Verificar se esta "no ar".
+			...command´s:
 				.show dbs
 					[Verificar os bancos criados]
 				.use local
@@ -36,7 +36,7 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 				.show collections
 					[Coleções existentes deste banco]
 				.exit
-					[Sair do administrador]==SPRING INITIALIZR==
+					[Sair do administrador]
 
 ## Sites Uteis
 	==SPRING INITIALIZR==
