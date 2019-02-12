@@ -78,6 +78,8 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 			.Mensagens de tratamento de erro
 	
 	.Adicionar Handler para melhorar o tratamento de exceções
+	
+	.Adicionar Load Balancer - Ribbon/Feign e Spring Cloud Netflix
 
 ## Considerações
 	A decisão de usar algumas tecnologias foi baseado no cotidiano, isto é,  o que eu uso diáriamente no
