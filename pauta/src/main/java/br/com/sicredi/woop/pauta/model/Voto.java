@@ -10,14 +10,14 @@ public class Voto {
 	
     @Id
     private String id;
-    private String idEleitor;
+    private String numeroMatricula;
     private SimNaoEnum voto;
     
     public Voto() {
     }
 
-    public Voto(String idEleitor, SimNaoEnum voto) {
-        this.idEleitor = idEleitor;
+    public Voto(String numeroMatricula, SimNaoEnum voto) {
+        this.numeroMatricula = numeroMatricula;
         this.voto = voto;
     }
 
@@ -25,12 +25,12 @@ public class Voto {
         return id;
     }
     
-	public String getIdEleitor() {
-		return idEleitor;
+	public String getNumeroMatricula() {
+		return numeroMatricula;
 	}
 
-	public void setIdEleitor(String idEleitor) {
-		this.idEleitor = idEleitor;
+	public void setNumeroMatricula(String numeroMatricula) {
+		this.numeroMatricula = numeroMatricula;
 	}
 
 	public SimNaoEnum getVoto() {

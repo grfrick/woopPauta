@@ -5,14 +5,16 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.sicredi.woop.pauta.client.EleitorClient;
+import br.com.sicredi.woop.pauta.client.AssociadoClient;
 import br.com.sicredi.woop.pauta.exception.WoopException;
 import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.repository.PautaRepository;
+import br.com.sicredi.woop.pauta.repository.VotoRepository;
 
 @Service
 public class VotoService {
@@ -21,43 +23,46 @@ public class VotoService {
 	public PautaRepository repository;
 	
 	@Autowired
-	public EleitorClient client;
+	public VotoRepository votoRepository;
+	
+	@Autowired
+	public AssociadoClient client;
 
 	public Pauta votar(String id, Voto voto) {
-        Pauta pauta = repository.findById(id).orElseThrow(() -> new WoopException(id));
+        Pauta pauta = repository.findById(id).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, id));
 
-        validaEleitorValido(voto.getIdEleitor());
-        validaPauta(id, pauta.getSessao());
-        validaVotoRepetido(id, voto.getIdEleitor(), pauta.getSessao().getVotos());
         validaPeriodoVotacao(pauta);        
+        validaAssociadoValido(voto.getNumeroMatricula());
+        validaPauta(id, pauta.getSessao());
+        validaVotoRepetido(id, voto.getNumeroMatricula(), pauta.getSessao().getVotos());
         
-        pauta.getSessao().getVotos().add(voto);
+        pauta.getSessao().getVotos().add(votoRepository.save(voto));
         
         return repository.save(pauta);
     }
 
-	private void validaEleitorValido(String tituloEleitor) {
-		if (null == client.buscarEleitor(tituloEleitor)) {
-			throw new WoopException("Eleitor não é válido com o título [" + tituloEleitor + "]");
+	private void validaAssociadoValido(String tituloAssociado) {
+		if (null == client.buscarAssociado(tituloAssociado)) {
+			throw new WoopException(HttpStatus.NOT_FOUND, "Associado não é válido com o título [" + tituloAssociado + "]");
 		}
 	}
 
 	private void validaPeriodoVotacao(Pauta pauta) {
 		if (LocalDateTime.now().isAfter(pauta.getSessao().getFim())) 
-            throw new WoopException("A sessão já encerrou, não é mais possivel votar. Seja mais rapido da próxima vez =]");
+            throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão já encerrou, não é mais possivel votar. Seja mais rapido da próxima vez =]");
 	}
 
-	private void validaVotoRepetido(String id, String idEleitor, Collection<Voto> votos) {
+	private void validaVotoRepetido(String id, String numeroMatricula, Collection<Voto> votos) {
 		Optional<Voto> temVoto = votos.stream()
-							            .filter(v -> v.getIdEleitor().equals(idEleitor))
+							            .filter(v -> v.getNumeroMatricula().equals(numeroMatricula))
 							            .findFirst();
 
         if (temVoto.isPresent()) 
-        	throw new WoopException("Eleitor [" + idEleitor + "] já votou na Pauta [" + id + "].");
+        	throw new WoopException(HttpStatus.UNAUTHORIZED,"Associado [" + numeroMatricula + "] já votou na Pauta [" + id + "].");
 	}
 
 	private void validaPauta(String id, Sessao sessao) {
 		if (null == sessao) 
-        	throw new WoopException("Sessão da Pauta [" + id + "] não encontrada.");
+        	throw new WoopException(HttpStatus.NOT_FOUND, "Sessão da Pauta [" + id + "] não encontrada.");
 	}
 }

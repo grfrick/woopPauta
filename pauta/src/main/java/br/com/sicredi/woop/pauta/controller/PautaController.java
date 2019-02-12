@@ -26,9 +26,9 @@ public class PautaController {
     private PautaService service;
 
     @ApiOperation(
-            value = "Cadastro da Pauta.",
+            value = "Criar uma Pauta.",
             notes = "Cadastra inicial de Pauta.")
-    @PostMapping("cadastro")
+    @PostMapping
     public ResponseEntity cadastrarPauta(@RequestParam(value = "Titulo", required = true) String titulo,
     								     @RequestParam(value = "Descricao", required = false) String descricao) {
     	service.criarPauta(titulo, descricao);
