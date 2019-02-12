@@ -79,6 +79,8 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 
 	.Adicionar testes unitário
 			Junit, Mockito, MockMvc,...
+	
+	.Adicionar Handler para melhorar o tratamento de exceções
 
 ## Considerações
 	A decisão de usar algumas tecnologias foi baseado no cotidiano, isto é,  o que eu uso diáriamente no
@@ -86,7 +88,8 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	lidas em matérias da área de TI.
 
 	Optei por provar do Docker e MongoDb (no Window) para simplificar a crianção e manutenção de uma instancia
-	de banco de dados e a opção do MongoDb pela sua simplicidade por não ser relacional.
+	de banco de dados e a opção do MongoDb pela sua simplicidade por não ser relacional, para fugir do tradicional
+	H2 ou ate mesmo da abstração fornecida pela Spring.
 
 	Usar conceito da arquitetura de microserviços com Spring Boot usando Rest para consumo, alem disso 
 	usado Spring Cloud para acessar clientes externos, o que possibilitaria deixar ainda mais granular os projetos.
