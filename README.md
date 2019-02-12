@@ -15,7 +15,7 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 				[Visualizar imagem baixada]
 			.docker run --name sicredi-mongo -p 27017:27017 -d mongo
 				[Subir um contêiner]
-			.docker exec -it some-mongo mongo admin
+			.docker exec -it sicredi-mongo mongo admin
 				[Executar o Administrador do MongoDB]
 			.docker ps -a
 				[Verifica o estado atual dos contêineres]
@@ -76,9 +76,6 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 			.LocalDateTime
 		Melhorar validações de imput de dados
 			.Mensagens de tratamento de erro
-
-	.Adicionar testes unitário
-			Junit, Mockito, MockMvc,...
 	
 	.Adicionar Handler para melhorar o tratamento de exceções
 
@@ -95,5 +92,5 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	usado Spring Cloud para acessar clientes externos, o que possibilitaria deixar ainda mais granular os projetos.
 	
 ## Rabisco de idéias
-	MVP: Criar estrutura para suporte rest para a criação e listagem de: Associado, Pauta, Sessao e Voto. 
+	MVP #1: Criar estrutura para suporte rest para a criação e listagem de: Associado, Pauta, Sessao e Voto. 
 ![alt text](https://github.com/grfrick/woopPauta/blob/master/rabisco%20inicia%20de%20ideias%20MVP.jpeg)
