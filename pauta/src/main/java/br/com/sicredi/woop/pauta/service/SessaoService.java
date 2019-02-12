@@ -60,5 +60,8 @@ public class SessaoService {
 	private void validaSessao(String idPauta, Pauta pauta) {
 		if (null == pauta.getSessao()) 
         	throw new WoopException(HttpStatus.NOT_FOUND, "Sessao não encontrada para a pauta [" + idPauta + "]");
+		
+		if (LocalDateTime.now().isBefore(pauta.getSessao().getFim())) 
+            throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão está aberta, espere encerrar para ver o resultado final.");
 	}
 }
