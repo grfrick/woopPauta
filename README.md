@@ -51,25 +51,25 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	Rodar applicação: 
 		Eclipse:
 			.Pauta > Botão direitor em cima de "PautaApplication.java" e Selecionar: "Run As..." "Java Application"
-			.Eleitor > Botão direitor em cima de "EleitorApplication.java" e Selecionar: "Run As..." "Java Application"
+			.Associado > Botão direitor em cima de "AssociadoApplication.java" e Selecionar: "Run As..." "Java Application"
 	
 		Maven:
 			.Pauta > No diretorio da aplicação rode a linha de commando: "mvn spring-boot:run"
-			.Eleitor > No diretorio da aplicação rode a linha de commando: "mvn spring-boot:run"
+			.Associado > No diretorio da aplicação rode a linha de commando: "mvn spring-boot:run"
 		
 		"No ar" em: 
 			.Pauta > http://localhost:8090/
-			.Eleitor > http://localhost:8091/
+			.Associado > http://localhost:8091/
 
 	Acessar Swagger:
 		.Pauta: http://localhost:8090/swagger-ui.html
-		.Eleitor: http://localhost:8091/swagger-ui.html
+		.Associado: http://localhost:8091/swagger-ui.html
 	
-	Tecnologias: Docker, Mongo, Spring Boot, Spring Cloud, Java8, Rest, ...
+	Tecnologias: Docker, Mongo, Spring Boot, Spring Cloud, Java8, Rest, Maven...
 		
 ## ++Para Melhorar++
 	.Documentação Swagger
-			http://springfox.github.io/springfox/docs/current/
+			usar: http://springfox.github.io/springfox/docs/current/
 
 	.Cliente Rest
 		Melhorar tipo dados:
