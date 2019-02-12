@@ -43,7 +43,7 @@ public class VotoService {
 
 	private void validaAssociadoValido(String tituloAssociado) {
 		if (null == client.buscarAssociado(tituloAssociado)) {
-			throw new WoopException(HttpStatus.NOT_FOUND, "Associado não é válido com o título [" + tituloAssociado + "]");
+			throw new WoopException(HttpStatus.NOT_FOUND, "Associado não encontrado Matricula inválida [" + tituloAssociado + "]");
 		}
 	}
 

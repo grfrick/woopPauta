@@ -18,24 +18,24 @@ public class AssociadoService {
     @Autowired
     private AssociadoRepository repository;
 
-    public void criar(String nome, String numeroTitulo) throws WoopException {
-        validaAssociado(numeroTitulo);
-        repository.save(new Associado(nome, numeroTitulo));
+    public Associado criar(String nome, String numeroMatricula) throws WoopException {
+        validaAssociado(numeroMatricula);
+        return repository.save(new Associado(nome, numeroMatricula));
     }
 
     public Page<Associado> buscarTodosAssociados(PageRequest pageRequest) {
         return repository.findAll(pageRequest);
     }
     
-    public Optional<Associado> buscarAssociado(String numeroTitulo) {
-    	return Optional.ofNullable(repository.findByNumeroMatricula(numeroTitulo));
+    public Optional<Associado> buscarAssociado(String numeroMatricula) {
+    	return Optional.ofNullable(repository.findByNumeroMatricula(numeroMatricula));
     }
 
-    private void validaAssociado(String numeroTitulo) throws WoopException {
-		Optional<Associado> associado = Optional.ofNullable(repository.findByNumeroMatricula(numeroTitulo));
+    private void validaAssociado(String numeroMatricula) throws WoopException {
+		Optional<Associado> associado = Optional.ofNullable(repository.findByNumeroMatricula(numeroMatricula));
         
         if (associado.isPresent()) {
-            throw new WoopException(HttpStatus.BAD_REQUEST, "Já existe um associado com o mesmo titulo [" + associado.get().getNumeroMatricula() + "]");
+            throw new WoopException(HttpStatus.BAD_REQUEST, "Já existe um associado com mesma Matricula [" + associado.get().getNumeroMatricula() + "]");
         }
 	}
 }

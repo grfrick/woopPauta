@@ -1,8 +1,12 @@
 package br.com.sicredi.woop.associado.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import br.com.sicredi.woop.associado.model.Associado;
 import br.com.sicredi.woop.associado.repository.AssociadoRepository;
 import br.com.sicredi.woop.associado.service.AssociadoService;
 
@@ -20,7 +25,10 @@ import br.com.sicredi.woop.associado.service.AssociadoService;
 @WebMvcTest(AssociadoController.class)
 public class AssociadoControllerTest {
 
-    @Autowired
+    private static final String MATRICULA = "123456780";
+	private static final String NOME = "Gian";
+
+	@Autowired
     private MockMvc mvc;
 
     @MockBean
@@ -28,20 +36,21 @@ public class AssociadoControllerTest {
 
     @MockBean
     private AssociadoRepository repository;
-
+    
     @Test
     public void quandoInformarTodosCamposDeveCriarAssociado() throws Exception {
-        mvc.perform(post("/associado")
+		mvc.perform(post("/associado")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nome\": \"Gian\", \"numeroMatricula\": \"123456780\"}"))
+				        .param("nome", NOME)
+				        .param("numeroMatricula", MATRICULA))
                         .andExpect(status().isCreated());
     }
 
     @Test
-    public void quandoNãoInformarNumeroMatriculaDeveCriarAssociado() throws Exception {
+    public void quandoNãoInformarNumeroMatriculaNaoDeveCriarAssociado() throws Exception {
         mvc.perform(post("/associado")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nome\":\"Gian R Frick\"}"))
+				        .param("nome", NOME))
                         .andExpect(status().isBadRequest());
     }
     
@@ -49,21 +58,33 @@ public class AssociadoControllerTest {
     public void quandoNãoInformarNomeNaoDeveCriarAssociado() throws Exception {
         mvc.perform(post("/associado")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"numeroMatricula\":\"123456789\"}"))
+				        .param("numeroMatricula", MATRICULA))
                         .andExpect(status().isBadRequest());
     }
 
     @Test
     public void quandoListarAssociadoesExibirTodos() throws Exception {
-        mvc.perform(get("/associado")
+        mvc.perform(get("/associado/listar")
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk());
     }
 
     @Test
-    public void quandoConsultarUmAssociadoExibirUnico() throws Exception {
+    public void quandoConsultarUmAssociadoNãoExibeNada() throws Exception {
         mvc.perform(get("/associado/buscar/123456789")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    public void quandoConsultarUmAssociadoExibirUnico() throws Exception {
+        when(repository.findByNumeroMatricula(any()))
+                        .thenReturn(new Associado());
+        when(service.buscarAssociado(any()))
+        				.thenReturn(Optional.of(new Associado()));
+
+        mvc.perform(get("/associado/buscar/123456789")
+                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk());
     }
 }
