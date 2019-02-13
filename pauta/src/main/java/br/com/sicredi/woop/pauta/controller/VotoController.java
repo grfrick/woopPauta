@@ -28,7 +28,7 @@ public class VotoController {
     @PostMapping
     public ResponseEntity votar(@RequestParam(value = "idPauta", required = true) String idPauta, 
 					    		@RequestParam(value = "numeroMatricula", required = true) String numeroMatricula,
-							    @RequestParam(value = "voto", required = false) SimNaoEnum voto) {
+							    @RequestParam(value = "voto", required = true) SimNaoEnum voto) {
     	service.votar(idPauta, new Voto(numeroMatricula, voto));
         return new ResponseEntity(HttpStatus.CREATED);
     }

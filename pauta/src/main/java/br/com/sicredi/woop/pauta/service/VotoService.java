@@ -11,6 +11,7 @@ import br.com.sicredi.woop.pauta.client.AssociadoClient;
 import br.com.sicredi.woop.pauta.domain.Associado;
 import br.com.sicredi.woop.pauta.exception.WoopAssociadoForaDoArException;
 import br.com.sicredi.woop.pauta.exception.WoopAssociadoNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopException;
 import br.com.sicredi.woop.pauta.exception.WoopPautaNaoLocalizadaException;
 import br.com.sicredi.woop.pauta.exception.WoopSessaoEncerradaException;
 import br.com.sicredi.woop.pauta.exception.WoopSessaoNaoLocalizadaException;
@@ -19,6 +20,8 @@ import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.repository.VotoRepository;
+import feign.FeignException;
+import feign.RetryableException;
 
 @Service
 public class VotoService {
@@ -60,12 +63,16 @@ public class VotoService {
 		
 		try {
 			associado = AssociadoClient.buscarAssociado(tituloAssociado);
-		} catch (RuntimeException erro) {
+		} catch (RetryableException erroOff) {
 			throw new WoopAssociadoForaDoArException();
+		} catch (FeignException erroUsuario) {
+			throw new WoopAssociadoNaoLocalizadaException();
+		} catch (RuntimeException erro) {
+			throw new WoopException();
 		}
 		
 		if (null == associado) 
-			throw new WoopAssociadoNaoLocalizadaException();
+			throw new WoopException();
 	}
 
 

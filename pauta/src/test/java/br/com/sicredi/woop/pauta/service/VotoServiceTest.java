@@ -1,6 +1,7 @@
 package br.com.sicredi.woop.pauta.service;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -8,18 +9,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import br.com.sicredi.woop.pauta.client.AssociadoClient;
 import br.com.sicredi.woop.pauta.domain.Associado;
 import br.com.sicredi.woop.pauta.enums.SimNaoEnum;
+import br.com.sicredi.woop.pauta.exception.WoopAssociadoForaDoArException;
 import br.com.sicredi.woop.pauta.exception.WoopAssociadoNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopException;
 import br.com.sicredi.woop.pauta.exception.WoopPautaNaoLocalizadaException;
 import br.com.sicredi.woop.pauta.exception.WoopSessaoEncerradaException;
 import br.com.sicredi.woop.pauta.exception.WoopSessaoNaoLocalizadaException;
@@ -28,6 +29,8 @@ import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.repository.VotoRepository;
+import feign.FeignException;
+import feign.RetryableException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VotoServiceTest {
@@ -66,7 +69,7 @@ public class VotoServiceTest {
 		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
     }
 	
-	@Test(expected = WoopAssociadoNaoLocalizadaException.class)
+	@Test(expected = WoopException.class)
     public void deveriaVotarMasNaoAchouAssociado() {
 		Pauta pauta = new Pauta("T1", "D1");
 		Sessao sessao = new Sessao();
@@ -125,5 +128,43 @@ public class VotoServiceTest {
     	doReturn(new Associado()).when(associadoClient).buscarAssociado(MATRICULA);
 
 		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
+    }
+	
+	@Test(expected = WoopAssociadoNaoLocalizadaException.class)
+    public void deveriaVotarMasNaoEncontrouAssociado() {
+		Pauta pauta = new Pauta("T1", "D1");
+		Sessao sessao = new Sessao();
+		Collection<Voto> votos = new ArrayList<Voto>();
+		Voto voto = new Voto(MATRICULA2, SimNaoEnum.NAO);
+		votos.add(voto);
+		sessao.setVotos(votos);
+		pauta.setSessao(sessao);
+		
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.of(pauta));
+	
+    	doThrow(FeignException.class).when(associadoClient).buscarAssociado(MATRICULA);
+    	
+    	
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.SIM));
+    }
+	
+	@Test(expected = WoopAssociadoForaDoArException.class)
+    public void deveriaVotarMasServicoDeAssociadoForaDoAr() {
+		Pauta pauta = new Pauta("T1", "D1");
+		Sessao sessao = new Sessao();
+		Collection<Voto> votos = new ArrayList<Voto>();
+		Voto voto = new Voto(MATRICULA2, SimNaoEnum.NAO);
+		votos.add(voto);
+		sessao.setVotos(votos);
+		pauta.setSessao(sessao);
+		
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.of(pauta));
+	
+    	doThrow(RetryableException.class).when(associadoClient).buscarAssociado(MATRICULA);
+    	
+    	
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.SIM));
     }
 }
