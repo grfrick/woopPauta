@@ -1,4 +1,4 @@
-# Projeto - woopPauta
+# Projeto
 Teste para Desenvolvedor(a) Backend do Woop Sicredi
 
 ## Setup´s
