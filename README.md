@@ -68,10 +68,12 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	Tecnologias do MVP: Docker, Mongo, Spring Boot, Spring Cloud, Java8, Rest, Maven, Junit, Mockito...
 		
 ## ++Para Melhorar++
-	.Documentação Swagger
-			usar: http://springfox.github.io/springfox/docs/current/
+	.Documentação Swagger.
+		usar: http://springfox.github.io/springfox/docs/current/
 
-	.Adicição de Load Balancer - Ribbon/Feign e Spring Cloud Netflix
+	.Adicição de Load Balancer - Ribbon/Feign e Spring Cloud Netflix.
+	
+	.Migrar o projeto para Gradle. 
 
 ## Considerações
 	A decisão de usar algumas tecnologias foi baseado no cotidiano, isto é,  o que eu uso diáriamente no
