@@ -12,15 +12,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import br.com.sicredi.woop.pauta.enums.SimNaoEnum;
 import br.com.sicredi.woop.pauta.service.VotoService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(VotoController.class)
 public class VotoControllerTest {
 
-    private static final String PAUTA = "2PauTA33";
-	private static final String MATRICULA = "123456780";
-	private static final String NOME = "Gian";
+    private static final String PAUTA = "2PautA33";
+	private static final String MATRICULA = "Mae223";
 
 	@Autowired
     private MockMvc mvc;
@@ -31,10 +31,10 @@ public class VotoControllerTest {
     @Test
     public void quandoInformarTodosCamposDeveVotar() throws Exception {
 		mvc.perform(post("/voto")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("idPauta", PAUTA)
-				        .param("nome", NOME)
-				        .param("numeroMatricula", MATRICULA))
-                        .andExpect(status().isCreated());
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("idPauta", PAUTA)
+		        .param("numeroMatricula", MATRICULA)
+				.param("voto", SimNaoEnum.NAO.toString()))
+                .andExpect(status().isCreated());
     }
 }
