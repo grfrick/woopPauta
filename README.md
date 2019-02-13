@@ -74,11 +74,7 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	.Cliente Rest
 		Melhorar tipo dados:
 			.LocalDateTime
-		Melhorar validações de imput de dados
-			.Mensagens de tratamento de erro
-	
-	.Adicionar Handler para melhorar o tratamento de exceções
-	
+			
 	.Adicionar Load Balancer - Ribbon/Feign e Spring Cloud Netflix
 
 ## Considerações
