@@ -3,9 +3,7 @@ package br.com.sicredi.woop.pauta.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +25,8 @@ public class VotoController {
     @ApiOperation(
             value = "Votar em uma Pauta.",
             notes = "Realizar Voto em uma Pauta valida.")
-    @PostMapping("/{idPauta}")
-    public ResponseEntity votar(@PathVariable("idPauta") String idPauta, 
+    @PostMapping
+    public ResponseEntity votar(@RequestParam(value = "idPauta", required = true) String idPauta, 
 					    		@RequestParam(value = "numeroMatricula", required = true) String numeroMatricula,
 							    @RequestParam(value = "voto", required = false) SimNaoEnum voto) {
     	service.votar(idPauta, new Voto(numeroMatricula, voto));

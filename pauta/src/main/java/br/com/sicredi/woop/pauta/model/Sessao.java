@@ -21,8 +21,15 @@ public class Sessao {
     }
 
     public Sessao(LocalDateTime inicioSessao, LocalDateTime fimSessao) {
-        this.inicio = null == inicioSessao ? LocalDateTime.now() : inicioSessao;
-        this.fim    = null == fimSessao    ? this.inicio.plusMinutes(1) : fimSessao.compareTo(this.inicio) > 0 ? fimSessao : this.inicio;
+        this.inicio = inicioSessao == null ? 
+        							LocalDateTime.now() : 
+        							inicioSessao;
+        							
+        this.fim = fimSessao == null ? 
+	        					this.inicio.plusMinutes(1) : 
+	        					fimSessao.compareTo(this.inicio) > 0 ? 
+		        								fimSessao : 
+		        								this.inicio;
     }
 
     public String getId() {
