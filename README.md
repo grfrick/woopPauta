@@ -71,11 +71,7 @@ Teste para Desenvolvedor(a) Backend do Woop Sicredi
 	.Documentação Swagger
 			usar: http://springfox.github.io/springfox/docs/current/
 
-	.Cliente Rest
-		Melhorar tipo dados:
-			.LocalDateTime
-			
-	.Adicionar Load Balancer - Ribbon/Feign e Spring Cloud Netflix
+	.Adicição de Load Balancer - Ribbon/Feign e Spring Cloud Netflix
 
 ## Considerações
 	A decisão de usar algumas tecnologias foi baseado no cotidiano, isto é,  o que eu uso diáriamente no
