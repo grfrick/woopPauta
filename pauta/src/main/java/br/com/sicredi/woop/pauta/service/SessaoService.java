@@ -28,8 +28,8 @@ public class SessaoService {
     public Pauta iniciarSessao(String idPauta, LocalDateTime inicio, LocalDateTime fim) {
         Pauta pauta = pautaService.buscarPautaPorId(idPauta).orElseThrow(() -> new WoopPautaNaoLocalizadaException());
         
-        validaPauta(idPauta, pauta);
-        validaNovaSessao(idPauta, pauta);
+        validaPauta(pauta);
+        validaNovaSessao(pauta);
         pauta.setSessao(repository.save(new Sessao(inicio, fim)));
 
         return pautaService.salvaPauta(pauta);
@@ -38,32 +38,32 @@ public class SessaoService {
     public Resultado resultadoVotacaoPauta(String idPauta) {
         Pauta pauta = pautaService.buscarPautaPorId(idPauta).orElseThrow(() -> new WoopPautaNaoLocalizadaException());
         
-        validaPauta(idPauta, pauta);
+        validaPauta(pauta);
         validaSessaoEmAndamento(idPauta, pauta);
        
         return contabilizaVotos(pauta.getSessao().getVotos());
     }
 
-	private Resultado contabilizaVotos(Collection<Voto> votos) {
+    private void validaPauta(Pauta pauta) {
+    	if (null == pauta)
+    		throw new WoopPautaNaoLocalizadaException();
+    }
+
+    private void validaNovaSessao(Pauta pauta) {
+    	if (null != pauta.getSessao()) 
+    		throw new WoopSessaoJaIniciadaException();
+    }
+
+    private void validaSessaoEmAndamento(String idPauta, Pauta pauta) {
+    	if (null == pauta.getSessao()) 
+    		throw new WoopSessaoNaoLocalizadaException();
+    	
+    	if (LocalDateTime.now().isBefore(pauta.getSessao().getFim())) 
+    		throw new WoopSessaoAbertaException();
+    }
+
+    private Resultado contabilizaVotos(Collection<Voto> votos) {
 		Resultado apuracao = new Resultado();
 		return apuracao.getResultadoCalculado(votos, apuracao);
-	}
-
-	private void validaPauta(String idPauta, Pauta pauta) {
-		if (null == pauta)
-        	throw new WoopPautaNaoLocalizadaException();
-	}
-	
-	private void validaNovaSessao(String idPauta, Pauta pauta) {
-		if (null != pauta.getSessao()) 
-        	throw new WoopSessaoJaIniciadaException();
-	}
-	
-	private void validaSessaoEmAndamento(String idPauta, Pauta pauta) {
-		if (null == pauta.getSessao()) 
-        	throw new WoopSessaoNaoLocalizadaException();
-		
-		if (LocalDateTime.now().isBefore(pauta.getSessao().getFim())) 
-            throw new WoopSessaoAbertaException();
 	}
 }
