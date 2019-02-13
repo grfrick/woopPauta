@@ -48,6 +48,6 @@ public class AssociadoController {
     @GetMapping("buscar/{numeroMatricula}")
     public ResponseEntity<Associado> buscarAssociado(@PathVariable("numeroMatricula") String numeroMatricula) {
         return service.buscarAssociado(numeroMatricula).map(associado -> new ResponseEntity<>(associado, HttpStatus.OK))
-        										  .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        										  .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

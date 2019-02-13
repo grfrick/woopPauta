@@ -20,11 +20,15 @@ public class PautaService {
         return repository.save(new Pauta(titulo, descricao));
     }
 
-    public Optional<Pauta> buscarPautaPorId(String id) {
-        return repository.findById(id);
+    public Optional<Pauta> buscarPautaPorId(String idPauta) {
+        return repository.findById(idPauta);
     }
     
     public Page<Pauta> buscarTodasPautas(PageRequest pageRequest) {
         return repository.findAll(pageRequest);
+    }
+    
+    public Pauta salvaPauta(Pauta pauta) {
+        return repository.save(pauta);
     }
 }

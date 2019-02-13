@@ -5,51 +5,62 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.sicredi.woop.pauta.client.AssociadoClient;
-import br.com.sicredi.woop.pauta.exception.WoopException;
+import br.com.sicredi.woop.pauta.domain.Associado;
+import br.com.sicredi.woop.pauta.exception.WoopAssociadoForaDoArException;
+import br.com.sicredi.woop.pauta.exception.WoopAssociadoNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopPautaNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopSessaoEncerradaException;
+import br.com.sicredi.woop.pauta.exception.WoopSessaoNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopVotoJaRealizadoException;
 import br.com.sicredi.woop.pauta.model.Pauta;
 import br.com.sicredi.woop.pauta.model.Sessao;
 import br.com.sicredi.woop.pauta.model.Voto;
-import br.com.sicredi.woop.pauta.repository.PautaRepository;
 import br.com.sicredi.woop.pauta.repository.VotoRepository;
 
 @Service
 public class VotoService {
 	
 	@Autowired
-	public PautaRepository repository;
+	public PautaService pautaService;
 	
 	@Autowired
-	public VotoRepository votoRepository;
+	public VotoRepository repository;
 	
 	@Autowired
-	public AssociadoClient client;
+	public AssociadoClient AssociadoClient;
 
-	public Pauta votar(String id, Voto voto) {
-        Pauta pauta = repository.findById(id).orElseThrow(() -> new WoopException(HttpStatus.NOT_FOUND, id));
+	public Pauta votar(String idPauta, Voto voto) {
+		Pauta pauta = pautaService.buscarPautaPorId(idPauta).orElseThrow(() -> new WoopPautaNaoLocalizadaException());
 
+        validaPauta(idPauta, pauta.getSessao());
         validaPeriodoVotacao(pauta);        
         validaAssociadoValido(voto.getNumeroMatricula());
-        validaPauta(id, pauta.getSessao());
-        validaVotoRepetido(id, voto.getNumeroMatricula(), pauta.getSessao().getVotos());
+        validaVotoRepetido(idPauta, voto.getNumeroMatricula(), pauta.getSessao().getVotos());
         
-        pauta.getSessao().getVotos().add(votoRepository.save(voto));
+        pauta.getSessao().getVotos().add(repository.save(voto));
         
-        return repository.save(pauta);
+        return pautaService.salvaPauta(pauta);
     }
 
 	private void validaAssociadoValido(String tituloAssociado) {
-		if (null == client.buscarAssociado(tituloAssociado)) {
-			throw new WoopException(HttpStatus.NOT_FOUND, "Associado não encontrado Matricula inválida [" + tituloAssociado + "]");
+		Associado associado = null;
+		
+		try {
+			associado = AssociadoClient.buscarAssociado(tituloAssociado);
+		} catch (RuntimeException erro) {
+			throw new WoopAssociadoForaDoArException();
 		}
+		
+		if (null == associado) 
+			throw new WoopAssociadoNaoLocalizadaException();
 	}
 
 	private void validaPeriodoVotacao(Pauta pauta) {
 		if (LocalDateTime.now().isAfter(pauta.getSessao().getFim())) 
-            throw new WoopException(HttpStatus.UNAUTHORIZED, "A sessão já encerrou, não é mais possivel votar. Seja mais rapido da próxima vez =]");
+            throw new WoopSessaoEncerradaException();
 	}
 
 	private void validaVotoRepetido(String id, String numeroMatricula, Collection<Voto> votos) {
@@ -58,11 +69,11 @@ public class VotoService {
 							            .findFirst();
 
         if (temVoto.isPresent()) 
-        	throw new WoopException(HttpStatus.UNAUTHORIZED,"Associado [" + numeroMatricula + "] já votou na Pauta [" + id + "].");
+        	throw new WoopVotoJaRealizadoException();
 	}
 
 	private void validaPauta(String id, Sessao sessao) {
 		if (null == sessao) 
-        	throw new WoopException(HttpStatus.NOT_FOUND, "Sessão da Pauta [" + id + "] não encontrada.");
+        	throw new WoopSessaoNaoLocalizadaException();
 	}
 }

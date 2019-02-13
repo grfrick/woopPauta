@@ -73,7 +73,7 @@ public class AssociadoControllerTest {
     public void quandoConsultarUmAssociadoNãoExibeNada() throws Exception {
         mvc.perform(get("/associado/buscar/123456789")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
     
     @Test
