@@ -25,12 +25,12 @@ public class SessaoService {
 	@Autowired
     private SessaoRepository repository;
 
-    public Pauta iniciarSessao(String idPauta, LocalDateTime inicio, LocalDateTime fim) {
+    public Pauta iniciarSessao(String idPauta, long duracao) {
         Pauta pauta = pautaService.buscarPautaPorId(idPauta).orElseThrow(() -> new WoopPautaNaoLocalizadaException());
         
         validaPauta(pauta);
         validaNovaSessao(pauta);
-        pauta.setSessao(repository.save(new Sessao(inicio, fim)));
+        pauta.setSessao(repository.save(new Sessao(duracao)));
 
         return pautaService.salvaPauta(pauta);
     }

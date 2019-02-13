@@ -42,7 +42,7 @@ public class SessaoServiceTest {
     	when(pautaService.buscarPautaPorId(PAUTA))
 				.thenReturn(Optional.ofNullable(null));
 
-		service.iniciarSessao(PAUTA, null, null);
+		service.iniciarSessao(PAUTA, 0);
     }
 	
 	@Test(expected = WoopPautaNaoLocalizadaException.class)
@@ -63,7 +63,7 @@ public class SessaoServiceTest {
     	when(pautaService.buscarPautaPorId(PAUTA))
 				.thenReturn(Optional.ofNullable(pauta));
 
-		service.iniciarSessao(PAUTA, null, null);
+		service.iniciarSessao(PAUTA, 0);
     }
 	
 	@Test
@@ -74,9 +74,9 @@ public class SessaoServiceTest {
     	when(pautaService.buscarPautaPorId(PAUTA))
 				.thenReturn(Optional.ofNullable(pauta));
     	
-    	when(repository.save(Mockito.any(Sessao.class))).thenReturn(new Sessao(null, null));
+    	when(repository.save(Mockito.any(Sessao.class))).thenReturn(new Sessao(0));
 
-		service.iniciarSessao(PAUTA, null, null);
+		service.iniciarSessao(PAUTA, 0);
     }
 	
 	@Test(expected = WoopSessaoNaoLocalizadaException.class)

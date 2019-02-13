@@ -10,26 +10,25 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Sessao {
 
-    @Id
+    private static final long DURACAO_DEFAULT = 1;
+    
+	@Id
     private String id;
     private LocalDateTime inicio;
     private LocalDateTime fim;
     private Collection<Voto> votos = new LinkedList<>();
-
+    private long duracao;
+    
     public Sessao() {
-        this.fim = LocalDateTime.now().plusMinutes(1);
+    	this.inicio = LocalDateTime.now();
+        this.fim = LocalDateTime.now().plusMinutes(DURACAO_DEFAULT);
     }
 
-    public Sessao(LocalDateTime inicioSessao, LocalDateTime fimSessao) {
-        this.inicio = inicioSessao == null ? 
-        							LocalDateTime.now() : 
-        							inicioSessao;
-        							
-        this.fim = fimSessao == null ? 
-	        					this.inicio.plusMinutes(1) : 
-	        					fimSessao.compareTo(this.inicio) > 0 ? 
-		        								fimSessao : 
-		        								this.inicio;
+    public Sessao(long duracao) {
+    	this.duracao = duracao;
+        this.inicio = LocalDateTime.now();
+        this.fim = duracao == 0 ? this.inicio.plusMinutes(DURACAO_DEFAULT) : 
+	        						this.inicio.plusMinutes(this.duracao);
     }
 
     public String getId() {
@@ -58,5 +57,13 @@ public class Sessao {
 
 	public void setVotos(Collection<Voto> votos) {
 		this.votos = votos;
+	}
+
+	public long getDuracao() {
+		return duracao;
+	}
+
+	public void setDuracao(long duracao) {
+		this.duracao = duracao;
 	}
 }

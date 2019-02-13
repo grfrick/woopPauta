@@ -26,12 +26,11 @@ public class SessaoController {
 
     @ApiOperation(
             value = "Iniciar a sessão de uma Pauta.",
-            notes = "Inicia a sessão de uma unica Pauta.")    
+            notes = "Inicia a sessão de uma unica Pauta. Se nao definir o tempo da sessao por default sera 1 minuto.")    
     @PostMapping("/iniciarSessao")
     public ResponseEntity iniciarSessao(@RequestParam(value = "idPauta", required = true) String idPauta, 
-								    	@RequestParam(value = "inicio", required = false) LocalDateTime inicio,
-										@RequestParam(value = "fim", required = false) LocalDateTime fim) {
-    	service.iniciarSessao(idPauta, inicio, fim);
+								    	@RequestParam(value = "duracao", defaultValue = "1", required = false) long duracao) {
+    	service.iniciarSessao(idPauta, duracao);
         return new ResponseEntity(HttpStatus.CREATED);
     }
    
