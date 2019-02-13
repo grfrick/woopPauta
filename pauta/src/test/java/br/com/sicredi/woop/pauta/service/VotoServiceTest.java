@@ -1,98 +1,134 @@
 package br.com.sicredi.woop.pauta.service;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
-import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import br.com.sicredi.woop.pauta.client.AssociadoClient;
-import br.com.sicredi.woop.pauta.repository.PautaRepository;
+import br.com.sicredi.woop.pauta.domain.Associado;
+import br.com.sicredi.woop.pauta.enums.SimNaoEnum;
+import br.com.sicredi.woop.pauta.exception.WoopAssociadoNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopPautaNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopSessaoEncerradaException;
+import br.com.sicredi.woop.pauta.exception.WoopSessaoNaoLocalizadaException;
+import br.com.sicredi.woop.pauta.exception.WoopVotoJaRealizadoException;
+import br.com.sicredi.woop.pauta.model.Pauta;
+import br.com.sicredi.woop.pauta.model.Sessao;
+import br.com.sicredi.woop.pauta.model.Voto;
 import br.com.sicredi.woop.pauta.repository.VotoRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VotoServiceTest {
 
-    private static final String MATRICULA = "09481171507";
-	private static final String NOME = "Foo";
+    private static final String PAUTA = "id123Pauta2";
+	private static final String MATRICULA = "09481171507";
+	private static final String MATRICULA2 = "094811715071";
 
 	@InjectMocks
     private VotoService service;
 
 	@Mock
-	private PautaRepository repository;
+	private VotoRepository repository;
 	
 	@Mock
-	private VotoRepository votoRepository;
+	private PautaService pautaService;
 	
 	@Mock
-	private AssociadoClient client;
+	private AssociadoClient associadoClient;
 	
 	@Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
-//    @Test
-//    public void deveCriarAssociado() {
-//        when(repository.save(any(Associado.class))).thenReturn(new Associado());
-//        assertThat(service.criar(NOME, MATRICULA), is(IsNull.notNullValue()));
-//    }
-//    
-//    @Test
-//    public void naoDeveCriarAssociadoDuplicado() {
-//    	when(repository.findByNumeroMatricula(MATRICULA))
-//			.thenReturn(new Associado(NOME, MATRICULA));
-//    	
-//        try {
-//        	service.criar(NOME, MATRICULA);
-//        } catch (WoopException expected) {
-//        	assertEquals("Já existe um associado com mesma Matricula [09481171507]", expected.getReason());
-//        }
-//    }
-//    
-//    @Test(expected = WoopException.class)
-//    public void deveOcorrerErroWoopException() {
-//        when(repository.save(any(Associado.class))).thenThrow(WoopException.class);
-//        service.criar(NOME, MATRICULA);
-//    }
-//    
-//    @Test
-//    public void deveBuscarAssociadoCadastrados() {
-//    	Page<Associado> paginas = Mockito.mock(Page.class);
-//    	PageRequest pageRequest = new PageRequest(25, 25);
-//
-//    	when(repository.findAll(pageRequest))
-//				.thenReturn(paginas);
-//
-//		Page<Associado> todos = service.buscarTodosAssociados(pageRequest);
-//		
-//		assertEquals(paginas, todos);
-//    }
-//    
-//    @Test
-//    public void deveBuscarUmAssociadoCadastrados() {
-//    	Associado associado = new Associado(NOME, MATRICULA); 
-//    	when(repository.findByNumeroMatricula(MATRICULA))
-//				.thenReturn(associado);
-//
-//		Optional<Associado> encontrado = service.buscarAssociado(MATRICULA);
-//		
-//		assertEquals(encontrado.get(), associado);
-//    }
+	@Test(expected = WoopPautaNaoLocalizadaException.class)
+    public void deveriaVotarMasNaoTemPauta() {
+    	
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.ofNullable(null));
+
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
+    }
+	
+	@Test(expected = WoopSessaoNaoLocalizadaException.class)
+    public void deveriaVotarMasNaoTemSessao() {
+    	
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.of(new Pauta()));
+
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
+    }
+	
+	@Test(expected = WoopAssociadoNaoLocalizadaException.class)
+    public void deveriaVotarMasNaoAchouAssociado() {
+		Pauta pauta = new Pauta("T1", "D1");
+		Sessao sessao = new Sessao();
+		pauta.setSessao(sessao);
+		
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.of(pauta));
+
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
+    }
+	
+	@Test(expected = WoopSessaoEncerradaException.class)
+    public void deveriaVotarMasSessaoEncerrada() {
+		Pauta pauta = new Pauta("T1", "D1");
+		Sessao sessao = new Sessao();
+		sessao.setFim(LocalDateTime.now().minusHours(1));
+		pauta.setSessao(sessao);
+		
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.of(pauta));
+
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
+    }
+	
+	@Test(expected = WoopVotoJaRealizadoException.class)
+    public void deveriaVotarMasNaoJaVotou() {
+		Pauta pauta = new Pauta("T1", "D1");
+		Sessao sessao = new Sessao();
+		Collection<Voto> votos = new ArrayList<Voto>();
+		Voto voto = new Voto(MATRICULA, SimNaoEnum.NAO);
+		votos.add(voto);
+		sessao.setVotos(votos);
+		pauta.setSessao(sessao);
+		
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.of(pauta));
+	
+    	doReturn(new Associado()).when(associadoClient).buscarAssociado(MATRICULA);
+
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
+    }
+	
+	@Test
+    public void deveriaVotarEConseguiu() {
+		Pauta pauta = new Pauta("T1", "D1");
+		Sessao sessao = new Sessao();
+		Collection<Voto> votos = new ArrayList<Voto>();
+		Voto voto = new Voto(MATRICULA2, SimNaoEnum.NAO);
+		votos.add(voto);
+		sessao.setVotos(votos);
+		pauta.setSessao(sessao);
+		
+    	when(pautaService.buscarPautaPorId(PAUTA))
+				.thenReturn(Optional.of(pauta));
+	
+    	doReturn(new Associado()).when(associadoClient).buscarAssociado(MATRICULA);
+
+		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
+    }
 }

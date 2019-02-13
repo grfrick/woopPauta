@@ -40,16 +40,13 @@ public class SessaoService {
         
         validaPauta(idPauta, pauta);
         validaSessaoEmAndamento(idPauta, pauta);
-        
+       
         return contabilizaVotos(pauta.getSessao().getVotos());
     }
 
 	private Resultado contabilizaVotos(Collection<Voto> votos) {
-		if (null != votos) {
-	         return new Resultado(votos);
-        } else {
-        	return new Resultado(0L, 0L, 0L);
-        }
+		Resultado apuracao = new Resultado();
+		return apuracao.getResultadoCalculado(votos, apuracao);
 	}
 
 	private void validaPauta(String idPauta, Pauta pauta) {

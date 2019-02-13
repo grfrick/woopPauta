@@ -24,10 +24,10 @@ import br.com.sicredi.woop.pauta.repository.VotoRepository;
 public class VotoService {
 	
 	@Autowired
-	public PautaService pautaService;
+	public VotoRepository repository;
 	
 	@Autowired
-	public VotoRepository repository;
+	public PautaService pautaService;
 	
 	@Autowired
 	public AssociadoClient AssociadoClient;
@@ -35,15 +35,25 @@ public class VotoService {
 	public Pauta votar(String idPauta, Voto voto) {
 		Pauta pauta = pautaService.buscarPautaPorId(idPauta).orElseThrow(() -> new WoopPautaNaoLocalizadaException());
 
-        validaPauta(idPauta, pauta.getSessao());
+        validaSessao(pauta.getSessao());
         validaPeriodoVotacao(pauta);        
         validaAssociadoValido(voto.getNumeroMatricula());
-        validaVotoRepetido(idPauta, voto.getNumeroMatricula(), pauta.getSessao().getVotos());
+        validaVotoRepetido(voto.getNumeroMatricula(), pauta.getSessao().getVotos());
         
         pauta.getSessao().getVotos().add(repository.save(voto));
         
         return pautaService.salvaPauta(pauta);
     }
+	
+	private void validaSessao(Sessao sessao) {
+		if (null == sessao) 
+			throw new WoopSessaoNaoLocalizadaException();
+	}
+
+	private void validaPeriodoVotacao(Pauta pauta) {
+		if (LocalDateTime.now().isAfter(pauta.getSessao().getFim())) 
+			throw new WoopSessaoEncerradaException();
+	}
 
 	private void validaAssociadoValido(String tituloAssociado) {
 		Associado associado = null;
@@ -58,22 +68,13 @@ public class VotoService {
 			throw new WoopAssociadoNaoLocalizadaException();
 	}
 
-	private void validaPeriodoVotacao(Pauta pauta) {
-		if (LocalDateTime.now().isAfter(pauta.getSessao().getFim())) 
-            throw new WoopSessaoEncerradaException();
-	}
 
-	private void validaVotoRepetido(String id, String numeroMatricula, Collection<Voto> votos) {
+	private void validaVotoRepetido(String numeroMatricula, Collection<Voto> votos) {
 		Optional<Voto> temVoto = votos.stream()
 							            .filter(v -> v.getNumeroMatricula().equals(numeroMatricula))
 							            .findFirst();
 
         if (temVoto.isPresent()) 
         	throw new WoopVotoJaRealizadoException();
-	}
-
-	private void validaPauta(String id, Sessao sessao) {
-		if (null == sessao) 
-        	throw new WoopSessaoNaoLocalizadaException();
 	}
 }
