@@ -48,11 +48,6 @@ public class VotoServiceTest {
 	@Mock
 	private AssociadoClient associadoClient;
 	
-	@Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-    }
-
 	@Test(expected = WoopPautaNaoLocalizadaException.class)
     public void deveriaVotarMasNaoTemPauta() {
     	

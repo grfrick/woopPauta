@@ -26,8 +26,6 @@ import br.com.sicredi.woop.pauta.repository.SessaoRepository;
 public class SessaoServiceTest {
 
     private static final String PAUTA = "id123Pauta2";
-	private static final String MATRICULA = "09481171507";
-	private static final String MATRICULA2 = "094811715071";
 
 	@InjectMocks
     private SessaoService service;
@@ -38,12 +36,6 @@ public class SessaoServiceTest {
 	@Mock
 	private PautaService pautaService;
 	
-	
-	@Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-    }
-
 	@Test(expected = WoopPautaNaoLocalizadaException.class)
     public void deveriaIniciarSessaoMasNaoTemPauta() {
     	
@@ -123,74 +115,4 @@ public class SessaoServiceTest {
     	
 		service.resultadoVotacaoPauta(PAUTA);
     }
-	
-//	@Test(expected = WoopSessaoNaoLocalizadaException.class)
-//    public void deveriaVotarMasNaoTemSessao() {
-//    	
-//    	when(pautaService.buscarPautaPorId(PAUTA))
-//				.thenReturn(Optional.of(new Pauta()));
-//
-//		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
-//    }
-//	
-//	@Test(expected = WoopAssociadoNaoLocalizadaException.class)
-//    public void deveriaVotarMasNaoAchouAssociado() {
-//		Pauta pauta = new Pauta("T1", "D1");
-//		Sessao sessao = new Sessao();
-//		pauta.setSessao(sessao);
-//		
-//    	when(pautaService.buscarPautaPorId(PAUTA))
-//				.thenReturn(Optional.of(pauta));
-//
-//		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
-//    }
-//	
-//	@Test(expected = WoopSessaoEncerradaException.class)
-//    public void deveriaVotarMasSessaoEncerrada() {
-//		Pauta pauta = new Pauta("T1", "D1");
-//		Sessao sessao = new Sessao();
-//		sessao.setFim(LocalDateTime.now().minusHours(1));
-//		pauta.setSessao(sessao);
-//		
-//    	when(pautaService.buscarPautaPorId(PAUTA))
-//				.thenReturn(Optional.of(pauta));
-//
-//		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
-//    }
-//	
-//	@Test(expected = WoopVotoJaRealizadoException.class)
-//    public void deveriaVotarMasNaoJaVotou() {
-//		Pauta pauta = new Pauta("T1", "D1");
-//		Sessao sessao = new Sessao();
-//		Collection<Voto> votos = new ArrayList<Voto>();
-//		Voto voto = new Voto(MATRICULA, SimNaoEnum.NAO);
-//		votos.add(voto);
-//		sessao.setVotos(votos);
-//		pauta.setSessao(sessao);
-//		
-//    	when(pautaService.buscarPautaPorId(PAUTA))
-//				.thenReturn(Optional.of(pauta));
-//	
-//    	doReturn(new Associado()).when(associadoClient).buscarAssociado(MATRICULA);
-//
-//		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
-//    }
-//	
-//	@Test
-//    public void deveriaVotarEConseguiu() {
-//		Pauta pauta = new Pauta("T1", "D1");
-//		Sessao sessao = new Sessao();
-//		Collection<Voto> votos = new ArrayList<Voto>();
-//		Voto voto = new Voto(MATRICULA2, SimNaoEnum.NAO);
-//		votos.add(voto);
-//		sessao.setVotos(votos);
-//		pauta.setSessao(sessao);
-//		
-//    	when(pautaService.buscarPautaPorId(PAUTA))
-//				.thenReturn(Optional.of(pauta));
-//	
-//    	doReturn(new Associado()).when(associadoClient).buscarAssociado(MATRICULA);
-//
-//		service.votar(PAUTA, new Voto(MATRICULA, SimNaoEnum.NAO));
-//    }
 }
