@@ -29,8 +29,8 @@ public class PautaController {
             value = "Criar uma Pauta.",
             notes = "Cadastra inicial de Pauta.")
     @PostMapping
-    public ResponseEntity cadastrarPauta(@RequestParam(value = "Titulo", required = true) String titulo,
-    								     @RequestParam(value = "Descricao", required = false) String descricao) {
+    public ResponseEntity cadastrarPauta(@RequestParam(value = "titulo", required = true) String titulo,
+    								     @RequestParam(value = "descricao", required = false) String descricao) {
     	service.criarPauta(titulo, descricao);
         return new ResponseEntity(HttpStatus.CREATED);
     }

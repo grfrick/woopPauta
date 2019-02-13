@@ -29,8 +29,8 @@ public class SessaoController {
             notes = "Inicia a sessão de uma unica Pauta.")    
     @PostMapping("/iniciarSessao")
     public ResponseEntity iniciarSessao(@RequestParam(value = "idPauta", required = true) String idPauta, 
-								    	@RequestParam(value = "Inicio", required = false) LocalDateTime inicio,
-										@RequestParam(value = "Fim", required = false) LocalDateTime fim) {
+								    	@RequestParam(value = "inicio", required = false) LocalDateTime inicio,
+										@RequestParam(value = "fim", required = false) LocalDateTime fim) {
     	service.iniciarSessao(idPauta, inicio, fim);
         return new ResponseEntity(HttpStatus.CREATED);
     }
